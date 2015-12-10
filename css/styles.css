@@ -1,0 +1,110 @@
+@-webkit-viewport   { width: device-width; }
+@-moz-viewport      { width: device-width; }
+@-ms-viewport       { width: device-width; }
+@-o-viewport        { width: device-width; }
+@viewport           { width: device-width; }
+
+#content {
+    margin-top: 5%;
+}
+
+.article {
+    background: no-repeat center center;
+    cursor: pointer;
+    zoom: 1.2;
+    -moz-transform: scale(1.2);
+    border: 1px solid grey;
+    margin-left: 5px;
+    margin-right: 5px;
+    height: 130px;
+    width: 130px;
+
+}
+
+.firstArticle {
+    background-size: 100%;
+    width: 270px;
+}
+
+.row {
+    margin-bottom:10px;
+}
+
+.overlay {
+    height: 33%;
+    width: 100%;
+    position:absolute;
+    bottom:0;
+    left: 0;
+    background: rgba(0, 0, 0, .6);
+    padding: 5px 0 0 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.overlay label {
+    font-size:8px;
+    color: lightgrey;
+}
+
+.articleAge {
+    position: absolute;
+    bottom: -1px;
+    right: 5px;
+}
+
+.articleAge label{
+    font-size: 6px;
+    color: darkgrey;
+}
+
+.youtube, .play {
+    background: url('../img/YouTube-logo-light.png') no-repeat;
+    height: 23px;
+    width: 42px;
+    background-size: 50px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.play {
+    height: 65px;
+    width: 65px;
+    background: url('../img/youtube_play_circle_small.png') no-repeat;
+    background-size: cover;
+    top: 18%;
+    left: 24%;
+}
+
+
+@media (min-width: 500px) {
+    .row {
+        margin-left:20%;
+        margin-right:20%;
+        width: 432px;
+    }
+}
+
+@media (min-width: 730px) {
+    .row {
+        margin-left:6%;
+        margin-right:6%;
+        width: 684px;
+    }
+}
+
+@media (min-width: 992px) {
+    .row {
+        margin-left:15%;
+        margin-right:15%;
+        width: 684px;
+    }
+}
+
+@media (min-width: 1200px) {
+.row {
+    margin-left:20%;
+    margin-right:20%;
+}
+}

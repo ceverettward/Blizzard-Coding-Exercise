@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Front End Panels Exercise</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link href="css/styles.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body onload="init();">
+    <div id="content" class="container">
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+<script>
+    function init() {
+        if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
+            var msViewportStyle = document.createElement('style')
+            msViewportStyle.appendChild(
+                    document.createTextNode(
+                            '@-ms-viewport{width:auto!important}'
+                    )
+            )
+            document.querySelector('head').appendChild(msViewportStyle)
+        }
+        generateArticles();
+    }
+
+    /**
+     * Retrieves article data from .json file and generates
+     * article panels for responsive grid
+     */
+    function generateArticles() {
+        $.getJSON("input/articles.json", function(articles) {
+            var $row = $("<div>", {class: "row"});
+            var articleGridCount = 0;
+            for(var i = 0; i < articles.length; i++) {
+                var $div;
+                if(i === 0) {
+                    $div = $("<div>", {class: "col-xs-6 article firstArticle", style: "background-image: url('"
+                        + articles[i].thumbnail.url + "');"});
+                    articleGridCount = 2;
+                } else {
+                    $div = $("<div>", {class: "col-xs-3 article", style: "background-image: url('"
+                        + articles[i].thumbnail.url + "');"});
+                    articleGridCount++;
+                }
+
+                addArticlePanelDetails($div, articles[i]);
+
+                /* Add this panel to the current row */
+                $row.append($div);
+
+                /* Add row if full, create new empty row */
+                if(articleGridCount % 4 === 0 || i === articles.length - 1) {
+                    $("#content").append($row);
+                    $row = $("<div>", {class: "row"});
+                }
+            }
+        });
+    }
+
+    /**
+     * Appends associated divs to article panel, including:
+     * Title overlay, date-string, and video icons (if applicable)
+     *
+     * @param {Object (div)} $div
+     * @param {Object} article
+     */
+    function addArticlePanelDetails($div, article) {
+        /* Add associated video icons if appropriate */
+        if(article.type === "video") {
+            var $youtube = $("<div>", {class: "youtube"});
+            var $play = $("<div>", {class: "play"});
+            $div.append($youtube);
+            $div.append($play);
+        }
+
+        /* Add title/article panel overlay */
+        var $overlay = $("<div>", {class: "overlay"});
+        var $articleTitle = $("<label>").text(article.title.toUpperCase());
+        $overlay.append($articleTitle);
+
+        /* Add article age */
+        var $age = $("<div>", {class: "articleAge"});
+        var articleAgeText = retrieveAgeText(article.updated);
+        var $articleAge = $("<label>").text(articleAgeText);
+        $age.append($articleAge);
+        $overlay.append($age);
+
+        $div.append($overlay);
+    }
+
+    /**
+     * Returns "how long ago" date-string (greatest denomination)
+     * on millis int parameter
+     *
+     * @param {Number} articleAge
+     * @return {String} ageText
+     */
+    function retrieveAgeText(articleAge) {
+        var ageText = "";
+        var minutes = false;
+
+        var intAge = (new Date() - new Date(articleAge));
+
+        var oneYear = 24*60*60*1000 * 365;
+        var oneMonth = 24*60*60*1000 * 30;
+        var oneWeek = 24*60*60*1000 * 7;
+        var oneDay = 24*60*60*1000;
+        var oneHour = 60*60*1000;
+        var oneMinute = 60*1000;
+
+        var diffYears = Math.floor(Math.abs((intAge)/(oneYear)));
+        var diffMonths = Math.floor(Math.abs((intAge)/(oneMonth)));
+        var diffWeeks = Math.floor(Math.abs((intAge)/(oneWeek)));
+        var diffDays = Math.floor(Math.abs((intAge)/(oneDay)));
+        var diffHours = Math.floor(Math.abs((intAge)/(oneHour)));
+        var diffMinutes = Math.floor(Math.abs((intAge)/(oneMinute)));
+
+        if(diffYears >= 1) {
+            ageText = diffYears + " YEAR";
+        } else if(diffMonths >= 1) {
+            ageText = diffMonths + " MONTH";
+        } else if(diffWeeks >= 1) {
+            ageText = diffWeeks + " WEEK";
+        } else if(diffDays >= 1) {
+            ageText = diffDays + " DAY";
+        } else if(diffHours >= 1) {
+            ageText = diffHours + " HOUR";
+        } else if(diffMinutes >= 1) {
+            minutes = true;
+            ageText = diffMinutes + " MIN";
+        }
+
+        if(ageText.charAt(0) !== '1') {
+            ageText = ageText + "S";
+        }
+        if(!minutes) {
+            ageText = ageText + " AGO";
+        }
+
+        return ageText;
+    }
+
+
+</script>
+</body>
+</html>
